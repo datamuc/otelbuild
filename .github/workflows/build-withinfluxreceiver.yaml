@@ -41,7 +41,6 @@ jobs:
 
         export OTELV=${{ inputs.version }}
         pip install PyYAML
-        apt update && apt install upx
 
         # Patch manifest.yaml
         python -c '
@@ -70,7 +69,12 @@ jobs:
       run: |
         set -ex
         ./ocb --config manifest.yaml
-        upx _build/otelcol
+    - name: Run UPX
+      uses: crazy-max/ghaction-upx@v3
+      with:
+        version: latest
+        files: |
+          _build/otelcol
     - uses: actions/upload-artifact@v6
       with:
         name: otelcol-${{ inputs.version }}-${{ steps.id.outputs.id }}
